@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(img/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+        #icon
+        {
+            width:52px;
+            height:52px;
+            border-radius: 50%;
+        }
+        #main
+        {
+            text-transform: capitalize;
+            font-weight: 600;
+            font-size:17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="input-value" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger" id="search-btn">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="city-name">Dhaka</h1>
+            <h3><span  id="temp">38.06</span>&deg;C</h3>
+            <h1 id="main" class="lead">Clouds</h1>
+        </div>
+    </div>
+
+    <script>
+        const searchBtn = document.getElementById("search-btn");
+        const inputBtn = document.getElementById("input-value");
+        const cityName= document.getElementById("city-name");
+        const temp = document.getElementById("temp");
+        const main = document.getElementById("main");
+        let geticon = document.getElementById("icon");
+        searchBtn.addEventListener("click",function(){
+            fetch('https://api.openweathermap.org/data/2.5/weather?q='+inputBtn.value+'&appid=2d7c4dc5810ba82bd31b9a8cab973b1d')
+            .then(response => response.json())
+            .then(data => displayOutPut(data))
+            .catch(err => alert(" Please note that searching by states available only for the USA locations."))
+            function displayOutPut(data)
+            {
+                const newVlaue = data["name"];
+                const newTemp = data["main"]["feels_like"];
+                const convertValue = Math.round(newTemp-273);
+                const newDescripetion = data["weather"]["0"]["description"];
+                let id = data["weather"]["0"]["id"];
+                if(id<299)
+                {
+                    geticon.src="./img/Thunderstorm.pnh";
+                }
+                else if (id<499)
+                {
+                    geticon.src="./img/Drizzle.png";
+                }
+                else if (id<599)
+                {
+                    geticon.src="./img/Rain.png";
+                }
+                else if (id<699)
+                {
+                    geticon.src="./img/Snow.png";
+                }
+                else if (id<799)
+                {
+                    geticon.src="./img/Atmosphere.png";
+                }
+                else if (id==800)
+                {
+                    geticon.src="./img/Clear.png";
+                }
+                else if (id>800)
+                {
+                    geticon.src="./img/Clouds.png";
+                }
+
+                inputBtn.value="";
+                cityName.innerText=newVlaue;
+                temp.innerText=convertValue;
+                main.innerText=newDescripetion;
+            }
+        })
+
+        
+
+    
+
+    </script>
+
+</body>
+
+</html>
